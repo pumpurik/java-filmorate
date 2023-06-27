@@ -31,14 +31,10 @@ public class UserServiceMemoryTest {
     }
 
     @Test
-    void createUserWithoutName() {
+    void createUserWithoutNameWithLogin() throws ValidationException {
         LocalDate now = LocalDate.now();
         User user = new User(1, "pomogite@", "login", "", now.format(formatter));
-        ValidationException validationException = assertThrows(ValidationException.class, () -> {
-            userService.createUser(user);
-        });
-        assertEquals("имя для отображения может быть пустым— в таком случае будет использован " +
-                "логин", validationException.getMessage());
+        userService.createUser(user);
         assertEquals("login", user.getName());
     }
 

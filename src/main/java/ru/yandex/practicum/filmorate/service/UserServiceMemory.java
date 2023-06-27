@@ -72,11 +72,11 @@ public class UserServiceMemory implements UserService {
     }
 
     private void validateName(User user) throws ValidationException {
-        if (user.getName() == null || user.getName().isBlank()) {
+        if ((user.getName() == null || user.getName().isBlank()) && user.getLogin() != null && !user.getLogin().isBlank()) {
             user.setName(user.getLogin());
-            log.info("Ошибка имени пользователя");
-            throw new ValidationException("имя для отображения может быть пустым— в таком случае будет использован " +
-                    "логин");
+            log.info("Ошибка имени пользователя, поменяли на логин");
+        } else if ((user.getName() == null || user.getName().isBlank()) && (user.getLogin() == null || user.getLogin().isBlank())) {
+            throw new ValidationException("имя для отображения может быть пустым");
         }
     }
 
