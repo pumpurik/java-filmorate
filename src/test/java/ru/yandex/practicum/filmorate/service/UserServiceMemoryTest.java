@@ -22,13 +22,15 @@ public class UserServiceMemoryTest {
     @InjectMocks
     private UserServiceMemory userService;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     @Test
     void createUserValid() throws ValidationException {
         LocalDate now = LocalDate.now();
         User user = new User(1, "pomogite@", "login", "name123", now.format(formatter));
         User user1 = userService.createUser(user);
-        assertEquals(user1,user);
+        assertEquals(user1, user);
     }
+
     @Test
     void createUserWithoutName() {
         LocalDate now = LocalDate.now();
@@ -40,6 +42,7 @@ public class UserServiceMemoryTest {
                 "логин", validationException.getMessage());
         assertEquals("login", user.getName());
     }
+
     @Test
     void createUserWithEmptyEmail() {
         LocalDate now = LocalDate.now();
@@ -49,8 +52,9 @@ public class UserServiceMemoryTest {
         });
         assertEquals("электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
     }
+
     @Test
-    void createUserWithEmailWithoutSobaka(){
+    void createUserWithEmailWithoutSobaka() {
         LocalDate now = LocalDate.now();
         User user1 = new User(1, "pomogite", "login", "user1", now.format(formatter));
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
@@ -58,8 +62,9 @@ public class UserServiceMemoryTest {
         });
         assertEquals("электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
     }
+
     @Test
-    void createUserWithEmptyLogin(){
+    void createUserWithEmptyLogin() {
         LocalDate now = LocalDate.now();
         User user = new User(1, "pomogite@", "", "user", now.format(formatter));
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
@@ -67,8 +72,9 @@ public class UserServiceMemoryTest {
         });
         assertEquals("логин не может быть пустым и содержать пробелы", validationException.getMessage());
     }
+
     @Test
-    void createUserWithLoginSpace(){
+    void createUserWithLoginSpace() {
         LocalDate now = LocalDate.now();
         User user = new User(1, "pomogite@", "d o r i m e", "user", now.format(formatter));
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
@@ -76,9 +82,11 @@ public class UserServiceMemoryTest {
         });
         assertEquals("логин не может быть пустым и содержать пробелы", validationException.getMessage());
     }
+
     @Test
-    void createUserNotValidBirthday(){
-        LocalDate future = LocalDate.now().plusMonths(1);;
+    void createUserNotValidBirthday() {
+        LocalDate future = LocalDate.now().plusMonths(1);
+        ;
         User user = new User(1, "pomogite@", "", "user1", future.format(formatter));
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user);
@@ -93,16 +101,18 @@ public class UserServiceMemoryTest {
         User user2 = new User(1, "user2@", "user2", "user2", now.format(formatter));
         userService.createUser(user1);
         userService.createUser(user2);
-        List<User> testUsers = new ArrayList(Arrays.asList(user1,user2));
-        assertEquals(userService.findAllUsers(),testUsers);
+        List<User> testUsers = new ArrayList(Arrays.asList(user1, user2));
+        assertEquals(userService.findAllUsers(), testUsers);
     }
+
     @Test
     void findAllUsersNotValid() throws ValidationException {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.findAllUsers();
         });
-        assertEquals("Список пользователей пуст",validationException.getMessage());
+        assertEquals("Список пользователей пуст", validationException.getMessage());
     }
+
     @Test
     void updateUserValid() throws ValidationException {
         LocalDate now = LocalDate.now();
@@ -110,8 +120,9 @@ public class UserServiceMemoryTest {
         User updateUser = new User(1, "user2@", "user2", "user2", now.format(formatter));
         userService.createUser(createUser);
         User user = userService.updateUser(updateUser);
-        assertEquals(user,updateUser);
+        assertEquals(user, updateUser);
     }
+
     @Test
     void updateUserNotValid() throws ValidationException {
         LocalDate now = LocalDate.now();
@@ -119,8 +130,8 @@ public class UserServiceMemoryTest {
         User updateUser = new User(100, "user2@", "user2", "user2", now.format(formatter));
         userService.createUser(createUser);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
-        User user = userService.updateUser(updateUser);
+            User user = userService.updateUser(updateUser);
         });
-        assertEquals("Такого пользователя не существует",validationException.getMessage());
+        assertEquals("Такого пользователя не существует", validationException.getMessage());
     }
 }

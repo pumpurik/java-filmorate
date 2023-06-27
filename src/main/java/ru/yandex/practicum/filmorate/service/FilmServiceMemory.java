@@ -48,7 +48,7 @@ public class FilmServiceMemory implements FilmService {
 
     @Override
     public List<Film> findAllFilms() throws ValidationException {
-        if (films.size()==0){
+        if (films.size() == 0) {
             log.info("Cписок фильмов пуст");
             throw new ValidationException("Список фильмов пуст");
         } else {
@@ -56,29 +56,33 @@ public class FilmServiceMemory implements FilmService {
             return new ArrayList<>(films.values());
         }
     }
-    private void validateName (Film film) throws ValidationException {
-        if (film.getName() == null||film.getName().isBlank()) {
+
+    private void validateName(Film film) throws ValidationException {
+        if (film.getName() == null || film.getName().isBlank()) {
             log.info("Ошибка названия фильма");
             throw new ValidationException("Название не может быть пустым");
         }
     }
-    private void validateDescription (Film film) throws ValidationException{
-        if (film.getDescription().length() > 200){
+
+    private void validateDescription(Film film) throws ValidationException {
+        if (film.getDescription().length() > 200) {
             log.info("Ошибка описания фильма");
             throw new ValidationException("Максимальная длина описания — 200 символов");
         }
     }
-    private void validateReleaseDate (Film film) throws ValidationException {
-        LocalDate date = LocalDate.of(1895,11,28);
+
+    private void validateReleaseDate(Film film) throws ValidationException {
+        LocalDate date = LocalDate.of(1895, 11, 28);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate realiseDate = LocalDate.parse(film.getReleaseDate(), formatter);
-        if (realiseDate.isBefore(date)){
+        if (realiseDate.isBefore(date)) {
             log.info("Ошибка даты релиза фильма");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
     }
-    private void validateDuration (Film film) throws ValidationException{
-        if (film.getDuration()<1){
+
+    private void validateDuration(Film film) throws ValidationException {
+        if (film.getDuration() < 1) {
             log.info("Ошибка продолжительности фильма");
             throw new ValidationException("Продолжительность фильма должна быть положительной");
         }

@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface UserService {
     User createUser(User user) throws ValidationException;
+
     User updateUser(User user) throws ValidationException;
+
     List<User> findAllUsers() throws ValidationException;
 }

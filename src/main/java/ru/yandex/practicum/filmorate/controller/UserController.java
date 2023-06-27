@@ -13,20 +13,23 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private UserService userService;
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/users")
-    public User createUser (@RequestBody User user) throws ValidationException{
+    public User createUser(@RequestBody User user) throws ValidationException {
         return userService.createUser(user);
     }
+
     @PutMapping("/users")
-    public User updateUser (@RequestBody User user) throws ValidationException{
+    public User updateUser(@RequestBody User user) throws ValidationException {
         return userService.updateUser(user);
     }
+
     @GetMapping("/users")
-    public List<User> findAllUsers () throws ValidationException{
+    public List<User> findAllUsers() throws ValidationException {
         return userService.findAllUsers();
     }
 }

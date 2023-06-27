@@ -19,17 +19,18 @@ public class FilmController {
     }
 
     @PostMapping("/films")
-    public Film createFilm (@RequestBody Film film) throws ValidationException {
+    public Film createFilm(@RequestBody Film film) throws ValidationException {
         return filmService.createFilm(film);
     }
+
     @PutMapping("/films")
-    public Film updateFilm (@RequestBody Film film) throws ValidationException {
+    public Film updateFilm(@RequestBody Film film) throws ValidationException {
 
         return filmService.updateFilm(film);
     }
 
     @GetMapping("/films")
-    public List<Film> findAllFilms () throws ValidationException{
+    public List<Film> findAllFilms() throws ValidationException {
         return filmService.findAllFilms();
     }
 

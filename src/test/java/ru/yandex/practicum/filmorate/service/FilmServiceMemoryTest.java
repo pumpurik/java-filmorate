@@ -26,7 +26,7 @@ class FilmServiceMemoryTest {
         LocalDate now = LocalDate.now();
         Film film = new Film(1, "name", "description", now.format(formatter), 10000L);
         Film film1 = filmService.createFilm(film);
-        assertEquals(film1,film);
+        assertEquals(film1, film);
     }
 
     @Test
@@ -77,10 +77,11 @@ class FilmServiceMemoryTest {
         Film updateFilm = new Film(1, "newName", "description", now.format(formatter), 10000L);
         filmService.createFilm(createFilm);
         Film film1 = filmService.updateFilm(updateFilm);
-        assertEquals(film1,updateFilm);
+        assertEquals(film1, updateFilm);
     }
+
     @Test
-    void updateFilmNotValid()throws ValidationException {
+    void updateFilmNotValid() throws ValidationException {
         LocalDate now = LocalDate.now();
         Film createFilm = new Film(1, "name", "description", now.format(formatter), 10000L);
         Film updateFilm = new Film(100, "newName", "description", now.format(formatter), 10000L);
@@ -88,7 +89,7 @@ class FilmServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             Film film1 = filmService.updateFilm(updateFilm);
         });
-        assertEquals("Такого фильма нет в списке",validationException.getMessage());
+        assertEquals("Такого фильма нет в списке", validationException.getMessage());
     }
 
     @Test
@@ -98,14 +99,15 @@ class FilmServiceMemoryTest {
         Film film2 = new Film(2, "film2", "description2", now.format(formatter), 20000L);
         filmService.createFilm(film1);
         filmService.createFilm(film2);
-        List<Film> testFilms = new ArrayList(Arrays.asList(film1,film2));
-        assertEquals(filmService.findAllFilms(),testFilms);
+        List<Film> testFilms = new ArrayList(Arrays.asList(film1, film2));
+        assertEquals(filmService.findAllFilms(), testFilms);
     }
+
     @Test
     void findAllFilmsNotValid() throws ValidationException {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.findAllFilms();
         });
-        assertEquals("Список фильмов пуст",validationException.getMessage());
+        assertEquals("Список фильмов пуст", validationException.getMessage());
     }
 }
