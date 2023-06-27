@@ -44,7 +44,7 @@ class FilmServiceMemoryTest {
     void createFilmWithNotValidDescription() {
         LocalDate now = LocalDate.now();
         Film film = new Film(1, "Name", "edkfbfgxkbcgjkncnjbkcvvnclccccccccccccccccfknvvvvvvvnvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" +
-                "fsdghghfgdfdcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccczcvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", now.format(formatter), 10000l);
+                "fsdghghfgdfdcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccczcvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", now.format(formatter), 10000L);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
