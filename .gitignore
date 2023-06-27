@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 HELP.md
-=======
 *.class
 *.log
 *.jar
@@ -12,7 +10,6 @@ HELP.md
 *.rar
 hs_err_pid*
 out/
->>>>>>> main
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -45,9 +42,6 @@ build/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
-=======
 
 *.db
 db/*
->>>>>>> main
