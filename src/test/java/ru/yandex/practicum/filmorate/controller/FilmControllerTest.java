@@ -42,7 +42,7 @@ class FilmControllerTest {
     void setUp() {
         LocalDate now = LocalDate.now();
 
-        film = new Film(1, "name", "description", now.format(formatter), 10000l);
+        film = new Film(1, "name", "description", now.format(formatter), 10000L);
     }
 
     @Test()
