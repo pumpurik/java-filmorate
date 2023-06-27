@@ -41,8 +41,8 @@ public class FilmServiceMemory implements FilmService {
             log.info("Фильм обновлен: {}", films.get(film.getId()));
             return films.get(film.getId());
         } else {
-            log.info("Такого фильма нет в списке");
-            throw new ValidationException("Такого фильма нет в списке");
+            log.info("Такого фильма нет в списке: {}", film.getId());
+            throw new ValidationException("Фильма с id " + film.getId() + " нет в списке");
         }
     }
 

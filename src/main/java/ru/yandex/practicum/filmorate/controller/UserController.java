@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/users")
 public class UserController {
     private UserService userService;
 
@@ -17,17 +18,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public User createUser(@RequestBody User user) throws ValidationException {
         return userService.createUser(user);
     }
 
-    @PutMapping("/users")
+    @PutMapping
     public User updateUser(@RequestBody User user) throws ValidationException {
         return userService.updateUser(user);
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> findAllUsers() throws ValidationException {
         return userService.findAllUsers();
     }

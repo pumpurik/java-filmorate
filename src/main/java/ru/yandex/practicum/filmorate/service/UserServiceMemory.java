@@ -41,8 +41,8 @@ public class UserServiceMemory implements UserService {
             log.info("Пользователь обновлен: {}", users.get(user.getId()));
             return users.get(user.getId());
         } else {
-            log.info("Такого пользователя нет в списке");
-            throw new ValidationException("Такого пользователя не существует");
+            log.info("Такого пользователя нет в списке: {}", user.getId());
+            throw new ValidationException("Пользователя с id " + user.getId() + " нет в списке");
         }
     }
 
@@ -60,14 +60,14 @@ public class UserServiceMemory implements UserService {
     private void validateEmail(User user) throws ValidationException {
         if (user.getEmail().isBlank() || user.getEmail() == null || !user.getEmail().contains("@")) {
             log.info("Ошибка почты пользователя");
-            throw new ValidationException("электронная почта не может быть пустой и должна содержать символ @");
+            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
         }
     }
 
     private void validateLogin(User user) throws ValidationException {
         if (user.getLogin().isBlank() || user.getLogin() == null || user.getLogin().contains(" ")) {
             log.info("Ошибка логина");
-            throw new ValidationException("логин не может быть пустым и содержать пробелы");
+            throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
     }
 
@@ -76,7 +76,8 @@ public class UserServiceMemory implements UserService {
             user.setName(user.getLogin());
             log.info("Ошибка имени пользователя, поменяли на логин");
         } else if ((user.getName() == null || user.getName().isBlank()) && (user.getLogin() == null || user.getLogin().isBlank())) {
-            throw new ValidationException("имя для отображения может быть пустым");
+            log.info("Ошибка имени пользователя, на логин не поменяли");
+            throw new ValidationException("Имя для отображения может быть пустым");
         }
     }
 
@@ -86,7 +87,7 @@ public class UserServiceMemory implements UserService {
         LocalDate birthdayDate = LocalDate.parse(user.getBirthday(), formatter);
         if (birthdayDate.isAfter(date)) {
             log.info("Ошибка даты рождения пользователя");
-            throw new ValidationException("дата рождения не может быть в будущем");
+            throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
 

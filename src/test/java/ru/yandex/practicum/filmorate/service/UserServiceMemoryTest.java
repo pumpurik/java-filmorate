@@ -45,7 +45,7 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user);
         });
-        assertEquals("электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
+        assertEquals("Электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user1);
         });
-        assertEquals("электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
+        assertEquals("Электронная почта не может быть пустой и должна содержать символ @", validationException.getMessage());
     }
 
     @Test
@@ -65,7 +65,7 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user);
         });
-        assertEquals("логин не может быть пустым и содержать пробелы", validationException.getMessage());
+        assertEquals("Логин не может быть пустым и содержать пробелы", validationException.getMessage());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user);
         });
-        assertEquals("логин не может быть пустым и содержать пробелы", validationException.getMessage());
+        assertEquals("Логин не может быть пустым и содержать пробелы", validationException.getMessage());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             userService.createUser(user);
         });
-        assertEquals("дата рождения не может быть в будущем", validationException.getMessage());
+        assertEquals("Дата рождения не может быть в будущем", validationException.getMessage());
     }
 
     @Test
@@ -127,6 +127,6 @@ public class UserServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             User user = userService.updateUser(updateUser);
         });
-        assertEquals("Такого пользователя не существует", validationException.getMessage());
+        assertEquals("Пользователя с id " + updateUser.getId() + " нет в списке", validationException.getMessage());
     }
 }

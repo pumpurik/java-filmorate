@@ -7,6 +7,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,8 +44,10 @@ class FilmServiceMemoryTest {
     @Test
     void createFilmWithNotValidDescription() {
         LocalDate now = LocalDate.now();
-        Film film = new Film(1, "Name", "edkfbfgxkbcgjkncnjbkcvvnclccccccccccccccccfknvvvvvvvnvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv" +
-                "fsdghghfgdfdcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccczcvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", now.format(formatter), 10000L);
+        byte[] array = new byte[201];
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        System.out.println(generatedString);
+        Film film = new Film(1, "Name", generatedString, now.format(formatter), 10000L);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
@@ -90,7 +93,7 @@ class FilmServiceMemoryTest {
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             Film film1 = filmService.updateFilm(updateFilm);
         });
-        assertEquals("Такого фильма нет в списке", validationException.getMessage());
+        assertEquals("Фильма с id " + updateFilm.getId() + " нет в списке", validationException.getMessage());
     }
 
     @Test

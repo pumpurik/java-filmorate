@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.experimental.FieldDefaults;
 
 
 @Data
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    private int id;
-    private String email;
-    private String login;
-    private String name;
-    private String birthday;
+    int id;
+    String email;
+    String login;
+    String name;
+    String birthday;
 
 }

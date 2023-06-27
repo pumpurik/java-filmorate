@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/films")
 public class FilmController {
 
     private FilmService filmService;
@@ -18,18 +19,18 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping("/films")
+    @PostMapping
     public Film createFilm(@RequestBody Film film) throws ValidationException {
         return filmService.createFilm(film);
     }
 
-    @PutMapping("/films")
+    @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
 
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/films")
+    @GetMapping
     public List<Film> findAllFilms() throws ValidationException {
         return filmService.findAllFilms();
     }
