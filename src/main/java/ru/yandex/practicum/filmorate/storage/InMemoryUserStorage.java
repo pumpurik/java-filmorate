@@ -1,22 +1,27 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@Service
+@Component
 @Slf4j
-public class UserServiceMemory implements UserService {
-    private Map<Integer, User> users = new HashMap<>();
-    int id = 0;
+@Data
+public class InMemoryUserStorage implements UserStorage {
+    private Map<Long, User> users = new HashMap<>();
+    private long id = 0;
+
+    @Override
+    public void updateUsers(User user) {
+        users.replace(user.getId(), user);
+    }
 
     @Override
     public User createUser(User user) throws ValidationException {
@@ -25,32 +30,45 @@ public class UserServiceMemory implements UserService {
         validateName(user);
         validateEmail(user);
         user.setId(++id);
+        user.setFriends(new LinkedHashSet<>());
         users.put(user.getId(), user);
         log.info("Пользователь добавлен: {}", users.get(user.getId()));
         return users.get(user.getId());
     }
 
     @Override
-    public User updateUser(User user) throws ValidationException {
+    public User getUser(long id) throws NotFoundException {
+        if (users.containsKey(id)) {
+            return users.get(id);
+        } else {
+            throw new NotFoundException("Пользователя с id " + id + " нет в списке");
+        }
+    }
+
+    @Override
+    public User updateUser(User user) throws ValidationException, NotFoundException {
         validateBirthday(user);
         validateLogin(user);
         validateName(user);
         validateEmail(user);
         if (users.containsKey(user.getId())) {
+            if (user.getFriends() == null) {
+                user.setFriends(new LinkedHashSet<>());
+            }
             users.replace(user.getId(), user);
             log.info("Пользователь обновлен: {}", users.get(user.getId()));
             return users.get(user.getId());
         } else {
             log.info("Такого пользователя нет в списке: {}", user.getId());
-            throw new ValidationException("Пользователя с id " + user.getId() + " нет в списке");
+            throw new NotFoundException("Пользователя с id " + user.getId() + " нет в списке");
         }
     }
 
     @Override
-    public List<User> findAllUsers() throws ValidationException {
+    public List<User> findAllUsers() {
         if (users.size() == 0) {
             log.info("Cписок пользователей пуст");
-            throw new ValidationException("Список пользователей пуст");
+            return Collections.emptyList();
         } else {
             log.info("Текущее кол-во пользователей: {}", users.size());
             return new ArrayList<>(users.values());

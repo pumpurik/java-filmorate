@@ -14,4 +14,5 @@ public class Film {
     String description;
     String releaseDate;
     long duration;
+    long likes;
 }
