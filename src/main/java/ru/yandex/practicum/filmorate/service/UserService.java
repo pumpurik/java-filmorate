@@ -28,8 +28,8 @@ public class UserService {
             User user2 = userStorage.getUsers().get(friendId);
             user1.getFriends().add(friendId);
             user2.getFriends().add(id);
-            log.info("Друг добавлен у пользователя c id " + id + ": {}", userStorage.getUsers().get(id));
-            log.info("Друг добавлен у пользователя c id " + friendId + ": {}", userStorage.getUsers().get(friendId));
+            log.info("Друг добавлен у пользователя c id {}: {}", id, userStorage.getUsers().get(id));
+            log.info("Друг добавлен у пользователя c id {}: {}", friendId, userStorage.getUsers().get(friendId));
             return userStorage.getUsers().get(id);
         } else {
             throw new NotFoundException("Пользователь не найден.");
@@ -41,8 +41,8 @@ public class UserService {
         User user2 = userStorage.getUsers().get(friendId);
         user1.getFriends().remove(friendId);
         user2.getFriends().remove(id);
-        log.info("Друг удален у пользователя c id " + id + ": {}", userStorage.getUsers().get(id));
-        log.info("Друг удален у пользователя c id " + friendId + ": {}", userStorage.getUsers().get(friendId));
+        log.info("Друг удален у пользователя c id {}: {}", id, userStorage.getUsers().get(id));
+        log.info("Друг удален у пользователя c id {}: {}", friendId, userStorage.getUsers().get(friendId));
         return userStorage.getUsers().get(id);
     }
 
@@ -51,7 +51,7 @@ public class UserService {
         friends = userStorage.getUsers().get(id).getFriends().stream()
                 .map(f -> userStorage.getUsers().get(f))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
-        log.info("Возвращаем друзей у пользователя c id " + id + ": {}", friends);
+        log.info("Возвращаем друзей у пользователя c id {}: {}", id, friends);
         return friends;
     }
 
@@ -62,7 +62,7 @@ public class UserService {
                 .filter(f -> otherUser.getFriends().contains(f))
                 .map(f -> userStorage.getUsers().get(f))
                 .collect(Collectors.toSet());
-        log.info("Возвращаем общих друзей у пользователей с id" + id + " ," + otherId + ": {}", commonFriends);
+        log.info("Возвращаем общих друзей у пользователей с id {} , {}: {}", id, otherId, commonFriends);
         return commonFriends;
 
     }

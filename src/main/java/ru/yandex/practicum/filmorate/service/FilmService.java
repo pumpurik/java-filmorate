@@ -31,7 +31,7 @@ public class FilmService {
         filmStorage.getFilms().get(id).setLikes(filmStorage.getFilms().get(id).getLikes() + 1);
         likesStorage.getLikes().put(filmStorage.getFilms().get(id), userStorage.getUsers().get(userId));
         if (likesStorage.getLikes().containsKey(filmStorage.getFilms().get(id))) {
-            log.info("Пользователь c id " + userId + " лайкнул фильм с id " + id + ": {}", filmStorage.getFilms().get(id));
+            log.info("Пользователь c id {} лайкнул фильм с id {}: {}", userId, id, filmStorage.getFilms().get(id));
             return filmStorage.getFilms().get(id);
         } else {
             return null;
@@ -42,7 +42,7 @@ public class FilmService {
         if (userStorage.getUsers().containsKey(userId) && filmStorage.getFilms().containsKey(id)) {
             likesStorage.getLikes().remove(filmStorage.getFilms().get(id), userStorage.getUsers().get(userId));
             filmStorage.getFilms().get(id).setLikes(filmStorage.getFilms().get(id).getLikes() - 1);
-            log.info("Пользователь c id " + userId + " удалил лайк с фильма с id " + id + ": {}", filmStorage.getFilms().get(id));
+            log.info("Пользователь c id {} удалил лайк с фильма с id {}: {}", userId, id, filmStorage.getFilms().get(id));
             return filmStorage.getFilms().get(id);
         } else if (!userStorage.getUsers().containsKey(userId)) {
             throw new NotFoundException("Фильм с таким айди не найден.");
@@ -58,7 +58,7 @@ public class FilmService {
                     .sorted(Comparator.comparing(Film::getId).thenComparing(Film::getLikes).reversed())
                     .limit(schet)
                     .collect(Collectors.toList());
-            log.info("Самые популярные фильмы в кол-ве " + count + ": {}", sortedFilms);
+            log.info("Самые популярные фильмы в кол-ве {}: {}", count, sortedFilms);
             return sortedFilms;
         } else {
             throw new ValidationException("Неверное значение count.");

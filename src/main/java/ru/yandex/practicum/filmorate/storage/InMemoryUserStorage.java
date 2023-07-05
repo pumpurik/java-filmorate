@@ -16,7 +16,7 @@ import java.util.*;
 @Data
 public class InMemoryUserStorage implements UserStorage {
     private Map<Long, User> users = new HashMap<>();
-    private long id = 0;
+    private long id;
 
     @Override
     public void updateUsers(User user) {

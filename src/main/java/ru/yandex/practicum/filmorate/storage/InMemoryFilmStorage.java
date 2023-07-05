@@ -19,7 +19,7 @@ import java.util.Map;
 @Data
 public class InMemoryFilmStorage implements FilmStorage {
     private Map<Integer, Film> films = new HashMap<>();
-    int id = 0;
+    int id;
 
     @Override
     public void updateFilms(Film film) {

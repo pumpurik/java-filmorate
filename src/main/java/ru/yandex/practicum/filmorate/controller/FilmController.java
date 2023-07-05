@@ -14,12 +14,11 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-@RequestMapping
+@RequestMapping("/films")
 public class FilmController {
 
     private FilmStorage filmStorage;
     private FilmService filmService;
-    private static final String URL = "/films";
 
     @Autowired
     public FilmController(FilmStorage filmStorage, FilmService filmService) {
@@ -27,38 +26,38 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping(URL)
+    @PostMapping
     public Film createFilm(@RequestBody Film film) throws ValidationException {
         return filmStorage.createFilm(film);
     }
 
-    @GetMapping(URL + "/{id}")
+    @GetMapping("/{id}")
     public Film getFilm(@PathVariable int id) throws NotFoundException {
         return filmStorage.getFilm(id);
     }
 
-    @PutMapping(URL)
+    @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException, NotFoundException {
 
         return filmStorage.updateFilm(film);
     }
 
-    @GetMapping(URL)
+    @GetMapping
     public List<Film> findAllFilms() {
         return filmStorage.findAllFilms();
     }
 
-    @PutMapping(URL + "/{id}/like/{userId}")
+    @PutMapping("/{id}/like/{userId}")
     public Film likeFilm(@PathVariable int id, @PathVariable int userId) {
         return filmService.likeFilm(id, userId);
     }
 
-    @DeleteMapping(URL + "/{id}/like/{userId}")
+    @DeleteMapping("/{id}/like/{userId}")
     public Film deleteLike(@PathVariable int id, @PathVariable long userId) throws NotFoundException {
         return filmService.deleteLikeFilm(id, userId);
     }
 
-    @GetMapping(URL + "/popular")
+    @GetMapping("/popular")
     public List<Film> getFilmWithCount(@RequestParam Optional<Long> count) throws ValidationException {
         if (count.isPresent()) {
             return filmService.getFilmWithCount(count);

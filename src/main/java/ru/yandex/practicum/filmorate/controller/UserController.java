@@ -14,11 +14,10 @@ import java.util.Set;
 
 @RestController
 @Slf4j
-@RequestMapping
+@RequestMapping("/users")
 public class UserController {
     private UserStorage userStorage;
     private UserService userService;
-    private static final String URL = "/users";
 
     @Autowired
     public UserController(UserStorage userStorage, UserService userService) {
@@ -26,42 +25,42 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(URL)
+    @PostMapping
     public User createUser(@RequestBody User user) throws ValidationException {
         return userStorage.createUser(user);
     }
 
-    @GetMapping(URL + "/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable long id) throws NotFoundException {
         return userStorage.getUser(id);
     }
 
-    @PutMapping(URL)
+    @PutMapping
     public User updateUser(@RequestBody User user) throws ValidationException, NotFoundException {
         return userStorage.updateUser(user);
     }
 
-    @GetMapping(URL)
+    @GetMapping
     public List<User> findAllUsers() throws NotFoundException {
         return userStorage.findAllUsers();
     }
 
-    @PutMapping(URL + "/{id}/friends/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable long id, @PathVariable Long friendId) throws NotFoundException {
         return userService.addFriend(id, friendId);
     }
 
-    @DeleteMapping(URL + "/{id}/friends/{friendId}")
+    @DeleteMapping("/{id}/friends/{friendId}")
     public User deleteFriend(@PathVariable long id, @PathVariable Long friendId) {
         return userService.deleteFriend(id, friendId);
     }
 
-    @GetMapping(URL + "/{id}/friends")
+    @GetMapping("/{id}/friends")
     public Set<User> getAllFriends(@PathVariable long id) {
         return userService.getAllFriends(id);
     }
 
-    @GetMapping(URL + "/{id}/friends/common/{otherId}")
+    @GetMapping("/{id}/friends/common/{otherId}")
     public Set<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
