@@ -19,7 +19,7 @@ public class FilmController {
 
     private FilmStorage filmStorage;
     private FilmService filmService;
-    private final static String URL = "/films";
+    private static final String URL = "/films";
 
     @Autowired
     public FilmController(FilmStorage filmStorage, FilmService filmService) {

@@ -18,7 +18,7 @@ import java.util.Set;
 public class UserController {
     private UserStorage userStorage;
     private UserService userService;
-    private final static String URL = "/users";
+    private static final String URL = "/users";
 
     @Autowired
     public UserController(UserStorage userStorage, UserService userService) {
