@@ -1,9 +1,10 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -18,15 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
-class FilmServiceMemoryTest {
+class InMemoryFilmStorageTest {
     @InjectMocks
-    private FilmServiceMemory filmService;
+    private InMemoryFilmStorage filmService;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Test
     void createFilmValid() throws ValidationException {
         LocalDate now = LocalDate.now();
-        Film film = new Film(1, "name", "description", now.format(formatter), 10000L);
+        Film film = new Film(1, "name", "description", now.format(formatter), 10000L, 0);
         Film film1 = filmService.createFilm(film);
         assertEquals(film1, film);
     }
@@ -34,7 +35,7 @@ class FilmServiceMemoryTest {
     @Test
     void createFilmWithoutName() {
         LocalDate now = LocalDate.now();
-        Film film = new Film(1, "", "description", now.format(formatter), 10000L);
+        Film film = new Film(1, "", "description", now.format(formatter), 10000L, 0);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
@@ -47,7 +48,7 @@ class FilmServiceMemoryTest {
         byte[] array = new byte[201];
         String generatedString = new String(array, Charset.forName("UTF-8"));
         System.out.println(generatedString);
-        Film film = new Film(1, "Name", generatedString, now.format(formatter), 10000L);
+        Film film = new Film(1, "Name", generatedString, now.format(formatter), 10000L, 0);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
@@ -57,7 +58,7 @@ class FilmServiceMemoryTest {
     @Test
     void createFilmNotValidRealiseDate() {
         LocalDate date = LocalDate.of(1894, 11, 28);
-        Film film = new Film(1, "name", "description", date.format(formatter), 1);
+        Film film = new Film(1, "name", "description", date.format(formatter), 1, 0);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
@@ -67,7 +68,7 @@ class FilmServiceMemoryTest {
     @Test
     void createFilmNotValidDuration() {
         LocalDate now = LocalDate.now();
-        Film film = new Film(1, "name", "description", now.format(formatter), 0);
+        Film film = new Film(1, "name", "description", now.format(formatter), 0, 0);
         ValidationException validationException = assertThrows(ValidationException.class, () -> {
             filmService.createFilm(film);
         });
@@ -75,43 +76,35 @@ class FilmServiceMemoryTest {
     }
 
     @Test
-    void updateFilmValid() throws ValidationException {
+    void updateFilmValid() throws ValidationException, NotFoundException {
         LocalDate now = LocalDate.now();
-        Film createFilm = new Film(1, "name", "description", now.format(formatter), 10000L);
-        Film updateFilm = new Film(1, "newName", "description", now.format(formatter), 10000L);
+        Film createFilm = new Film(1, "name", "description", now.format(formatter), 10000L, 0);
+        Film updateFilm = new Film(1, "newName", "description", now.format(formatter), 10000L, 0);
         filmService.createFilm(createFilm);
         Film film1 = filmService.updateFilm(updateFilm);
         assertEquals(film1, updateFilm);
     }
 
     @Test
-    void updateFilmNotValid() throws ValidationException {
+    void updateFilmNotValid() throws NotFoundException, ValidationException {
         LocalDate now = LocalDate.now();
-        Film createFilm = new Film(1, "name", "description", now.format(formatter), 10000L);
-        Film updateFilm = new Film(100, "newName", "description", now.format(formatter), 10000L);
+        Film createFilm = new Film(1, "name", "description", now.format(formatter), 10000L, 0);
+        Film updateFilm = new Film(100, "newName", "description", now.format(formatter), 10000L, 0);
         filmService.createFilm(createFilm);
-        ValidationException validationException = assertThrows(ValidationException.class, () -> {
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> {
             Film film1 = filmService.updateFilm(updateFilm);
         });
-        assertEquals("Фильма с id " + updateFilm.getId() + " нет в списке", validationException.getMessage());
+        assertEquals("Фильма с id " + updateFilm.getId() + " нет в списке", notFoundException.getMessage());
     }
 
     @Test
-    void findAllFilms() throws ValidationException {
+    void findAllFilms() throws ValidationException, NotFoundException {
         LocalDate now = LocalDate.now();
-        Film film1 = new Film(1, "film1", "description1", now.format(formatter), 10000L);
-        Film film2 = new Film(2, "film2", "description2", now.format(formatter), 20000L);
+        Film film1 = new Film(1, "film1", "description1", now.format(formatter), 10000L, 0);
+        Film film2 = new Film(2, "film2", "description2", now.format(formatter), 20000L, 0);
         filmService.createFilm(film1);
         filmService.createFilm(film2);
         List<Film> testFilms = new ArrayList(Arrays.asList(film1, film2));
         assertEquals(filmService.findAllFilms(), testFilms);
-    }
-
-    @Test
-    void findAllFilmsNotValid() throws ValidationException {
-        ValidationException validationException = assertThrows(ValidationException.class, () -> {
-            filmService.findAllFilms();
-        });
-        assertEquals("Список фильмов пуст", validationException.getMessage());
     }
 }

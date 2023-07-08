@@ -1,7 +1,9 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.storage;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -12,11 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+@Component
 @Slf4j
-public class FilmServiceMemory implements FilmService {
-    private final Map<Integer, Film> films = new HashMap<>();
-    int id = 0;
+@Data
+public class InMemoryFilmStorage implements FilmStorage {
+    private Map<Integer, Film> films = new HashMap<>();
+    int id;
+
+    @Override
+    public void updateFilms(Film film) {
+        films.replace(film.getId(), film);
+    }
 
     @Override
     public Film createFilm(Film film) throws ValidationException {
@@ -25,13 +33,23 @@ public class FilmServiceMemory implements FilmService {
         validateDuration(film);
         validateReleaseDate(film);
         film.setId(++id);
+        film.setLikes(0);
         films.put(film.getId(), film);
         log.info("Фильм добавлен: {}", films.get(film.getId()));
         return films.get(film.getId());
     }
 
     @Override
-    public Film updateFilm(Film film) throws ValidationException {
+    public Film getFilm(int id) throws NotFoundException {
+        if (films.containsKey(id)) {
+            return films.get(id);
+        } else {
+            throw new NotFoundException("Фильма с id " + id + " нет в списке");
+        }
+    }
+
+    @Override
+    public Film updateFilm(Film film) throws ValidationException, NotFoundException {
         validateName(film);
         validateDescription(film);
         validateDuration(film);
@@ -42,19 +60,14 @@ public class FilmServiceMemory implements FilmService {
             return films.get(film.getId());
         } else {
             log.info("Такого фильма нет в списке: {}", film.getId());
-            throw new ValidationException("Фильма с id " + film.getId() + " нет в списке");
+            throw new NotFoundException("Фильма с id " + film.getId() + " нет в списке");
         }
     }
 
     @Override
-    public List<Film> findAllFilms() throws ValidationException {
-        if (films.size() == 0) {
-            log.info("Cписок фильмов пуст");
-            throw new ValidationException("Список фильмов пуст");
-        } else {
-            log.info("Текущее кол-во фильмов: {}", films.size());
-            return new ArrayList<>(films.values());
-        }
+    public List<Film> findAllFilms() {
+        log.info("Текущее кол-во фильмов: {}", films.size());
+        return new ArrayList<>(films.values());
     }
 
     private void validateName(Film film) throws ValidationException {
