@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-
+@Slf4j
 public class NullUtils {
     public static <F> F getOrNull(Callable<F> callable) {
         return getOrDefault(callable, null);
@@ -13,7 +15,7 @@ public class NullUtils {
         try {
             return callable.call();
         } catch (Throwable e) {
-
+            log.debug("error");
         }
         return defaultValue;
     }
