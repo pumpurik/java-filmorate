@@ -31,7 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.containsKey(id)) {
             return films.get(id);
         } else {
-            throw new NotFoundException("Фильма с id " + id + " нет в списке");
+            throw new NotFoundException(String.format("Фильма с id  %s нет в списке", id));
         }
     }
 
@@ -44,7 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return films.get(film.getId());
         } else {
             log.info("Такого фильма нет в списке: {}", film.getId());
-            throw new NotFoundException("Фильма с id " + film.getId() + " нет в списке");
+            throw new NotFoundException(String.format("Фильма с id  %s нет в списке", film.getId()));
         }
     }
 

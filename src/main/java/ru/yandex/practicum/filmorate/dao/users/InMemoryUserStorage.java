@@ -31,7 +31,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
-            throw new NotFoundException("Пользователя с id " + id + " нет в списке");
+            throw new NotFoundException(String.format("Пользователя с id  %s нет в списке", id));
         }
     }
 
@@ -47,7 +47,7 @@ public class InMemoryUserStorage implements UserStorage {
             return users.get(user.getId());
         } else {
             log.info("Такого пользователя нет в списке: {}", user.getId());
-            throw new NotFoundException("Пользователя с id " + user.getId() + " нет в списке");
+            throw new NotFoundException(String.format("Пользователя с id %s нет в списке", user.getId()));
         }
     }
 

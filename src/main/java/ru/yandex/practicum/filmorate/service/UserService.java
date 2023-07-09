@@ -112,14 +112,14 @@ public class UserService {
 
     private void validateEmail(User user) throws ValidationException {
         if (user.getEmail().isBlank() || user.getEmail() == null || !user.getEmail().contains("@")) {
-            log.info("Ошибка почты пользователя");
+            log.info("Ошибка почты пользователя. Электронная почта не может быть пустой и должна содержать символ @");
             throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @");
         }
     }
 
     private void validateLogin(User user) throws ValidationException {
         if (user.getLogin().isBlank() || user.getLogin() == null || user.getLogin().contains(" ")) {
-            log.info("Ошибка логина");
+            log.info("Ошибка логина. Логин не может быть пустым и содержать пробелы");
             throw new ValidationException("Логин не может быть пустым и содержать пробелы");
         }
     }
@@ -127,9 +127,9 @@ public class UserService {
     private void validateName(User user) throws ValidationException {
         if ((user.getName() == null || user.getName().isBlank()) && user.getLogin() != null && !user.getLogin().isBlank()) {
             user.setName(user.getLogin());
-            log.info("Ошибка имени пользователя, поменяли на логин");
+            log.info("Ошибка имени пользователя. Имя для отображения может быть пустым, поменяли на логин");
         } else if ((user.getName() == null || user.getName().isBlank()) && (user.getLogin() == null || user.getLogin().isBlank())) {
-            log.info("Ошибка имени пользователя, на логин не поменяли");
+            log.info("Ошибка имени пользователя. Имя для отображения может быть пустым, на логин не поменяли");
             throw new ValidationException("Имя для отображения может быть пустым");
         }
     }
@@ -139,7 +139,7 @@ public class UserService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthdayDate = LocalDate.parse(user.getBirthday(), formatter);
         if (birthdayDate.isAfter(date)) {
-            log.info("Ошибка даты рождения пользователя");
+            log.info("Ошибка даты рождения пользователя. Дата рождения не может быть в будущем");
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
     }
