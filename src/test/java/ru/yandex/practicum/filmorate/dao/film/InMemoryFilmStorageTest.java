@@ -51,7 +51,7 @@ class InMemoryFilmStorageTest {
         NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> {
             Film film1 = filmService.updateFilm(updateFilm);
         });
-        assertEquals("Фильма с id " + updateFilm.getId() + " нет в списке", notFoundException.getMessage());
+        assertEquals(String.format("Фильма с id  %s нет в списке", updateFilm.getId()), notFoundException.getMessage());
     }
 
     @Test
