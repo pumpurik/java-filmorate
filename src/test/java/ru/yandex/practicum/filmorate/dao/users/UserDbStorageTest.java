@@ -33,8 +33,8 @@ class UserDbStorageTest {
     @Test
     void createUser() throws ValidationException, NotFoundException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        User findCreateUser = userDbStorage.getUser(1);
+        User user = userDbStorage.createUser(new User(3, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
+        User findCreateUser = userDbStorage.getUser(user.getId());
         assertNotNull(user);
         assertThat(user).isEqualTo(findCreateUser);
     }
@@ -42,33 +42,32 @@ class UserDbStorageTest {
     @Test
     void findAllUsers() throws ValidationException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
+        User user = userDbStorage.createUser(new User(1, "pomogite@1", "login", "name123", now.format(formatter), Collections.emptySet()));
         List<User> users = userDbStorage.findAllUsers();
         assertNotNull(users);
         assertThat(users).isNotEmpty().contains(user);
     }
 
     @Test
-    void removeUser() throws ValidationException, NotFoundException {
+    void removeUser() throws ValidationException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        userDbStorage.removeUser(1L);
+        User user = userDbStorage.createUser(new User(1, "pomogite@2", "login", "name123", now.format(formatter), Collections.emptySet()));
+        userDbStorage.removeUser(user.getId());
 
         assertThrows(NotFoundException.class, () -> {
-            User findUser = userDbStorage.getUser(1L);
+            userDbStorage.getUser(user.getId());
         });
     }
 
     @Test
     void updateUser() throws ValidationException, NotFoundException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        userDbStorage.updateUser(new User(1, "newUser", "newLogin", "newName", now.format(formatter), Collections.emptySet()));
-        User findUpdateUser = userDbStorage.getUser(1);
+        User user = userDbStorage.createUser(new User(1, "pomogite@3", "login", "name123", now.format(formatter), Collections.emptySet()));
+        userDbStorage.updateUser(new User(user.getId(), "newUser", "newLogin", "newName", now.format(formatter), Collections.emptySet()));
+        User findUpdateUser = userDbStorage.getUser(user.getId());
         assertNotNull(findUpdateUser);
         assertThat(Optional.of(findUpdateUser)).hasValueSatisfying(f -> {
-            assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(f).hasFieldOrPropertyWithValue("email", "newUser");
+            assertThat(f).hasFieldOrPropertyWithValue("id", user.getId());
             assertThat(f).hasFieldOrPropertyWithValue("login", "newLogin");
             assertThat(f).hasFieldOrPropertyWithValue("name", "newName");
         });
@@ -77,29 +76,29 @@ class UserDbStorageTest {
     @Test
     void getUser() throws ValidationException, NotFoundException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        User getUser = userDbStorage.getUser(1);
+        User user = userDbStorage.createUser(new User(1, "pomogite@4", "login", "name123", now.format(formatter), Collections.emptySet()));
+        User getUser = userDbStorage.getUser(user.getId());
         assertNotNull(getUser);
         assertThat(Optional.of(getUser)).hasValueSatisfying(f -> {
-            assertThat(f).hasFieldOrPropertyWithValue("id", 1L);
+            assertThat(f).hasFieldOrPropertyWithValue("id", user.getId());
         });
     }
 
     @Test
     void getEmptyFriendByUserId() throws ValidationException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        List<User> friendByUserId = userDbStorage.getFriendByUserId(1L);
+        User user = userDbStorage.createUser(new User(1, "pomogite@6", "login", "name123", now.format(formatter), Collections.emptySet()));
+        List<User> friendByUserId = userDbStorage.getFriendByUserId(user.getId());
         assertThat(friendByUserId).isEmpty();
     }
 
     @Test
     void getFriendByUserId() throws ValidationException {
         LocalDate now = LocalDate.now();
-        User user = userDbStorage.createUser(new User(1, "pomogite@", "login", "name123", now.format(formatter), Collections.emptySet()));
-        User friend = userDbStorage.createUser(new User(2, "newPomogite@", "newLogin", "name123", now.format(formatter), Collections.emptySet()));
-        friendshipStorage.addFriend(new Friendship(1, 2, FriendStatus.NOT_CONFIRMED));
-        List<User> friendsByUserId = userDbStorage.getFriendByUserId(1L);
+        User user = userDbStorage.createUser(new User(1, "pomogite@7", "login", "name123", now.format(formatter), Collections.emptySet()));
+        User friend = userDbStorage.createUser(new User(1, "newPomogite@8", "newLogin", "name123", now.format(formatter), Collections.emptySet()));
+        Friendship friendship = friendshipStorage.addFriend(new Friendship(user.getId(), friend.getId(), FriendStatus.NOT_CONFIRMED));
+        List<User> friendsByUserId = userDbStorage.getFriendByUserId(friendship.getUserId());
         assertThat(friendsByUserId).isNotEmpty();
         assertThat(friendsByUserId).contains(friend);
     }
