@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
 @Slf4j
 public class NullUtils {
     public static <F> F getOrNull(Callable<F> callable) {
